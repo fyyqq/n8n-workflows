@@ -49,7 +49,7 @@ Before you begin, you must have:
 
 
 ## 🔁 Flow Diagram
-![Workflow Screenshot](https://raw.githubusercontent.com/fyyqq/n8n-workflows/refs/heads/main/TechCrunch%20Feed%20Distributor/Screenshot%202025-11-16%20003508.png)
+![Workflow Screenshot](https://raw.githubusercontent.com/fyyqq/n8n-workflows/refs/heads/main/TechCrunch%20Feed%20Distributor/screenshot/Screenshot%202025-11-16%20003508.png)
 
 ---
 
