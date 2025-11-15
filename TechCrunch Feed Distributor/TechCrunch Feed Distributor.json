@@ -1,0 +1,3262 @@
+{
+  "name": "TechCrunch Feed Distributor",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 15,
+              "unit": "minutes"
+            }
+          ]
+        },
+        "feedUrl": "https://techcrunch.com/feed"
+      },
+      "type": "n8n-nodes-base.rssFeedReadTrigger",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -1056
+      ],
+      "id": "3ad57d59-1bb2-410f-ae61-5e54d4b2d406",
+      "name": "RSS Feed Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6f8a465a-9632-4e03-8fce-ec9d5421ded4",
+              "name": "timestamp-en",
+              "value": "={{ DateTime.fromISO($json.isoDate).toRelative() }}",
+              "type": "string"
+            },
+            {
+              "id": "2111b926-b495-47c0-8584-8044f116f4b4",
+              "name": "timestamp-my",
+              "value": "={{ DateTime.fromISO($json.isoDate).toRelative() }}",
+              "type": "string"
+            },
+            {
+              "id": "bd26e44f-7905-4a75-932b-cfb3c9cdfa2d",
+              "name": "datetime-utc",
+              "value": "={{ DateTime.fromISO($json.isoDate).setZone('UTC').toFormat('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            },
+            {
+              "id": "cddcc2c7-57ee-4f1b-9516-f6a50432d826",
+              "name": "datetime-my",
+              "value": "={{ DateTime.fromISO($json.isoDate).setZone('Asia/Kuala_Lumpur').toFormat('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -256,
+        -1056
+      ],
+      "id": "b98d4ab5-f9ef-4673-856b-581ad3c3c183",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "https://techcrunch.com/feed",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2064,
+        -1696
+      ],
+      "id": "f71a689a-b515-4d0f-bc21-e56a93ddce1e",
+      "name": "RSS Read",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        -2656
+      ],
+      "id": "09e32c2a-48cb-491c-b7c8-c2041526b92b",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ffae6353-ee52-4ff2-84d8-04ba5d5a31c5",
+              "leftValue": "={{ $('Edit Fields').item.json.link }}",
+              "rightValue": "={{ $json.Link }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "6b1f9138-2737-4b84-964a-dee8724352c1",
+              "leftValue": "={{ $('Edit Fields').item.json.link }}",
+              "rightValue": "={{ $json.Link }}",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        176,
+        -1056
+      ],
+      "id": "4ec2fbeb-6573-47c3-98e5-bfea0d475655",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ceb01a3b-4fd2-404b-a63d-1498c6cdb744",
+              "name": "timestamp",
+              "value": "={{ DateTime.fromISO($json.isoDate).toRelative() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1856,
+        -1696
+      ],
+      "id": "099fdcda-bf46-435a-9e86-f02e87bb8e2c",
+      "name": "Edit Fields1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "# Update Timestamp every 15 Minutes",
+        "height": 576,
+        "width": 1968,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -576,
+        -592
+      ],
+      "typeVersion": 1,
+      "id": "41c528ba-b12b-40cf-a04b-62796a034451",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Delete Feed over than 24 Hours",
+        "height": 576,
+        "width": 1968,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -576,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "4514f1d4-9023-4aa7-906b-6ea6ebe59dba",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# Create (Testing)",
+        "height": 800,
+        "width": 1968,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2176,
+        -2176
+      ],
+      "typeVersion": 1,
+      "id": "83db0c3e-47de-45c4-8424-240d5ea42728",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        -432
+      ],
+      "id": "cef23caa-7453-4933-a297-e933e556ca5a",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Techcrunch (en)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -224,
+        -432
+      ],
+      "id": "fa2a6b69-032e-42f0-9605-26da70d6000f",
+      "name": "Get row(s) in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0539c0ea-1b64-49cd-9e5a-3bac44c8caaa",
+              "name": "Link",
+              "value": "={{ $json.Link }}",
+              "type": "string"
+            },
+            {
+              "id": "a394dae6-ba1b-49dc-8152-b69e7373ca24",
+              "name": "Timestamp",
+              "value": "={{ DateTime.fromISO($json.Isodate).toRelative() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        -432
+      ],
+      "id": "741743bd-c17f-4659-9612-0487aa3ddec8",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "content": "# Send New feed by schedule",
+        "height": 720,
+        "width": 4976,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -576,
+        -1344
+      ],
+      "typeVersion": 1,
+      "id": "ad468b40-b4ed-46c0-9f9f-348974f3ad07",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Techcrunch (en)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.Timestamp }}",
+            "Link": "={{ $json.Link }}"
+          },
+          "matchingColumns": [
+            "Link"
+          ],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Author",
+              "displayName": "Author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image",
+              "displayName": "Image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Isodate",
+              "displayName": "Isodate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        192,
+        -432
+      ],
+      "id": "c2917f5b-255c-4c91-bb74-937a70694e87",
+      "name": "Update row in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Remove (Testing)",
+        "height": 800,
+        "width": 1968,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3440,
+        -2176
+      ],
+      "typeVersion": 1,
+      "id": "49c874fa-e2e0-48b2-893b-eaa09bad0f9f",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        400,
+        -976
+      ],
+      "id": "f1fce85f-df7b-403a-9cad-a5e3c05b14d7",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        144
+      ],
+      "id": "c804649a-d7ad-46fc-8903-70d888ffb0fe",
+      "name": "Schedule Trigger2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Techcrunch (en)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -256,
+        144
+      ],
+      "id": "711a2430-aaa3-49fc-a64e-345194526be5",
+      "name": "Get row(s) in sheet3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "da91a11c-f7a6-415e-b8c7-9ffde84ab348",
+              "leftValue": "={{ $json['Created At'] }}",
+              "rightValue": "={{ DateTime.now().minus({ days: 1 }).toISO() }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "afterOrEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -48,
+        144
+      ],
+      "id": "991b2c32-f10b-4ef0-97bb-a3994f24d9c2",
+      "name": "Check before 24 Hours"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Techcrunch (en)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=0"
+        },
+        "startIndex": "={{ $json.row_number }}",
+        "numberToDelete": 500
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        272,
+        160
+      ],
+      "id": "f2e966fd-26c9-4b9d-b4f1-a5bfa8fc6ebb",
+      "name": "Delete rows more than 24 Hour",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "isoDate",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        -1632,
+        -2032
+      ],
+      "id": "626aae61-3c76-4f98-a756-67980ddbd8b5",
+      "name": "Sort1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ceb01a3b-4fd2-404b-a63d-1498c6cdb744",
+              "name": "timestamp",
+              "value": "={{ DateTime.fromISO($json.isoDate).toRelative() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1840,
+        -2032
+      ],
+      "id": "0db3aee6-7523-4461-9541-dc67d6b03cf8",
+      "name": "Edit Fields4",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=AI",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2064,
+        -2032
+      ],
+      "id": "85df1f0d-71a1-4989-b788-d231c8ab588a",
+      "name": "RSS Read2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "isoDate",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        -1632,
+        -1872
+      ],
+      "id": "f33c3842-6259-4ddf-8f7c-a10330f4e57b",
+      "name": "Sort",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ceb01a3b-4fd2-404b-a63d-1498c6cdb744",
+              "name": "timestamp",
+              "value": "={{ DateTime.fromISO($json.isoDate).toRelative() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1840,
+        -1872
+      ],
+      "id": "f4779469-7541-4ac3-8729-cc8a3e35924f",
+      "name": "Edit Fields3",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "http://feeds.bbci.co.uk/news/world/rss.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2064,
+        -1872
+      ],
+      "id": "d0c06b4b-75ba-40c3-b728-9e5ae8978227",
+      "name": "RSS Read1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.link }}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1408,
+        -1696
+      ],
+      "id": "0128e73d-67a9-4883-a65b-20f53d1b65e9",
+      "name": "HTTP Request",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -1632,
+        -1696
+      ],
+      "id": "8ff2b29d-17a4-4e74-a372-5c2b50897659",
+      "name": "Limit",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "featuredImage",
+              "cssSelector": "meta[property=\"og:image\"]",
+              "returnValue": "attribute"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        -1200,
+        -1696
+      ],
+      "id": "0fd45b50-830a-4cd6-8bb9-3f3fc7303cd8",
+      "name": "HTML",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "# Update (Testing)",
+        "height": 800,
+        "width": 1968,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1440,
+        -2176
+      ],
+      "typeVersion": 1,
+      "id": "f9fa732c-d253-4a68-aab7-8082de188b30",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.Link }}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1792,
+        -1712
+      ],
+      "id": "3351b23c-ac0f-4aea-9bbd-f577deacce23",
+      "name": "HTTP Request1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "articleText",
+              "cssSelector": ".entry-content "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        2000,
+        -1712
+      ],
+      "id": "61a1574e-fe8e-497f-a26c-1ccc6927a37b",
+      "name": "HTML1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "60dbef48-d209-4614-bca8-9ed2abf68d29",
+              "name": "article",
+              "value": "={{ $json.articleText }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2208,
+        -1712
+      ],
+      "id": "a5d595ef-19f2-4dc4-85f5-c0c00ab2a198",
+      "name": "Edit Fields7",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "60dbef48-d209-4614-bca8-9ed2abf68d29",
+              "name": "image",
+              "value": "==IMAGE(\"{{ $json.featuredImage.content }}\", 1)",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        768,
+        -1184
+      ],
+      "id": "dc6736d5-9010-4f05-a952-66c62b872c86",
+      "name": "Edit Fields8"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Techcrunch",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1552,
+        -1712
+      ],
+      "id": "2ee12da5-e8e3-4b35-adf8-eee464a6348a",
+      "name": "Get row(s) in sheet6",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.article }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Please summarize the following article: {\n\nProvide your answer ONLY as a JSON object with two keys: \n\n1. \"EN\" for the English summary. \n2. \"BM\" for the Malay summary."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        2400,
+        -1792
+      ],
+      "id": "024cd42c-2a12-427b-a9cc-fbc48c3a70f0",
+      "name": "Basic LLM Chain",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2416,
+        -1600
+      ],
+      "id": "25a3c285-e762-4a8b-84dc-283650181b04",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3VnIWazyLz1fpaGQ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function node: parse fenced JSON in item.json.text and map BM -> MY\nconst out = [];\n\nfor (const item of $input.all()) {\n  const raw = item.json.text;\n\n  // 1) ambil content dalam ```json ... ```\n  const m = typeof raw === 'string' && raw.match(/```(?:json)?\\s*([\\s\\S]*?)\\s*```/i);\n  const jsonText = m ? m[1] : raw; // fallback kalau takde fence\n\n  let parsed = {};\n  try {\n    parsed = JSON.parse(jsonText);\n  } catch (err) {\n    // kalau parse gagal, return error flag supaya senang debug\n    item.json._parseError = err.message;\n    out.push(item);\n    continue;\n  }\n\n  // 2) map keys — contoh: EN stays EN, BM -> MY (atau gunakan MY jika dah wujud)\n  const EN = parsed.EN ?? parsed.En ?? parsed.en ?? '';\n  const MY = parsed.MY ?? parsed.BM ?? parsed.Bm ?? parsed.my ?? '';\n\n  // 3) bentuk output structure yg kau mahu\n  const newItem = {\n    json: {\n      text: {\n        EN,\n        MY,\n      },\n    },\n  };\n\n  out.push(newItem);\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2784,
+        -1712
+      ],
+      "id": "cc321f1b-b656-40a8-9e44-aee18e75b654",
+      "name": "Code in JavaScript",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "60dbef48-d209-4614-bca8-9ed2abf68d29",
+              "name": "article",
+              "value": "={{ $json.articleText }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        -976
+      ],
+      "id": "9679e282-e531-4165-9523-6a8debfe19cb",
+      "name": "Edit Fields9"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.article }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Please summarize the following article: {\n\nProvide your answer ONLY as a JSON object with two keys: \n\n1. \"EN\" for the English summary. \n2. \"BM\" for the Malay summary.\n\nalso make a summary with some emoji to the related topic & spacing between section if the summary long enough"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1136,
+        -1088
+      ],
+      "id": "08baac9f-4938-4c18-b2a6-1aace14c9210",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        -896
+      ],
+      "id": "0bca8ee2-b20e-4294-9906-19e1bc4f826d",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3VnIWazyLz1fpaGQ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = [];\n\nfor (const item of $input.all()) {\n  const raw = item.json.text;\n\n  // 1️⃣ Extract JSON from ```json ... ```\n  const match = raw.match(/```json\\s*([\\s\\S]*?)\\s*```/);\n  const extracted = match ? match[1] : raw;\n\n  // 2️⃣ Try parse JSON\n  let parsed = {};\n  try {\n    parsed = JSON.parse(extracted);\n  } catch (err) {\n    item.json._error = \"Failed to parse fenced JSON: \" + err.message;\n    out.push(item);\n    continue;\n  }\n\n  // 3️⃣ Access EN & BM\n  const EN = parsed.EN || \"\";\n  const BM = parsed.BM || \"\";\n\n  // 4️⃣ Push output clean\n  out.push({\n    json: {\n      EN,\n      BM\n    }\n  });\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        -1088
+      ],
+      "id": "cd849aeb-3713-4a6e-8e21-6c1bab997d38",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "featuredImage",
+              "cssSelector": "meta[property=\"og:image\"]",
+              "returnValue": "attribute"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        -1184
+      ],
+      "id": "cae79eac-e4b5-41fa-bacc-2795d1e22224",
+      "name": "Get Image"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "articleText",
+              "cssSelector": ".entry-content "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        -976
+      ],
+      "id": "af2d79e4-7faf-4b8b-923e-b2c20f08e35f",
+      "name": "Get Article"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1728,
+        -1168
+      ],
+      "id": "d8b3346a-c89a-4b17-b873-49899fb91de7",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Techcrunch",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1552,
+        -1952
+      ],
+      "id": "d2b1c18b-578f-4973-8564-1e2da6f5ec23",
+      "name": "Get row(s) in sheet7",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "517b43f4-8165-4626-9721-9cea7336af79",
+              "name": "=datetime-my",
+              "value": "={{ DateTime.fromISO($json['Created At']).setZone('Asia/Kuala_Lumpur').toFormat('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        -1952
+      ],
+      "id": "831ac37b-90e0-4bc4-ada5-3b774beba996",
+      "name": "Edit Fields10",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Techcrunch",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Link": "={{ $('Get row(s) in sheet7').item.json.Link }}"
+          },
+          "matchingColumns": [
+            "Link"
+          ],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Author",
+              "displayName": "Author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image",
+              "displayName": "Image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Summary (EN)",
+              "displayName": "Summary (EN)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Summary (MY)",
+              "displayName": "Summary (MY)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Created At (MY)",
+              "displayName": "Created At (MY)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2000,
+        -1952
+      ],
+      "id": "1e72c900-fbc8-454a-92eb-1ffda0387a91",
+      "name": "Update row in sheet3",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "# Get (Testing) ##",
+        "height": 800,
+        "width": 1584,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -176,
+        -2176
+      ],
+      "typeVersion": 1,
+      "id": "ce3c39c6-b12a-4027-8719-53c6bf6974b8",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "url": "https://techcrunch.com/feed",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        -1872
+      ],
+      "id": "d3e509f7-81a2-40c8-8117-077dd1144c30",
+      "name": "RSS Read3",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6f8a465a-9632-4e03-8fce-ec9d5421ded4",
+              "name": "timestamp",
+              "value": "={{ DateTime.fromISO($json.isoDate).toRelative() }}",
+              "type": "string"
+            },
+            {
+              "id": "cddcc2c7-57ee-4f1b-9516-f6a50432d826",
+              "name": "datetime-my",
+              "value": "={{ DateTime.fromISO($json.isoDate).setZone('Asia/Kuala_Lumpur').toFormat('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        -1872
+      ],
+      "id": "f79d770e-3e5e-4483-af1b-d8a4fc226bad",
+      "name": "Edit Fields5",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Techcrunch (en)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.title }}",
+            "Author": "={{ $json.creator }}",
+            "Link": "={{ $('Edit Fields').item.json.link }}",
+            "Timestamp": "={{ $('Edit Fields').item.json.timestamp }}",
+            "Description": "={{ $json.content }}",
+            "Created At": "={{ $('Edit Fields').item.json.isoDate }}",
+            "Image": "=",
+            "Summary (EN)": "=",
+            "Summary (MY)": "={{ $json.text.MY }}",
+            "Created At (MY)": "={{ $('Edit Fields').item.json['datetime-my'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Author",
+              "displayName": "Author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Image",
+              "displayName": "Image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary (EN)",
+              "displayName": "Summary (EN)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary (MY)",
+              "displayName": "Summary (MY)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Created At (MY)",
+              "displayName": "Created At (MY)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        -1872
+      ],
+      "id": "5436b482-0d3d-4185-9747-dd5efe674984",
+      "name": "Append row in sheet1",
+      "executeOnce": false,
+      "alwaysOutputData": true,
+      "retryOnFail": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Techcrunch",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Link": "={{ $('Get row(s) in sheet6').item.json.Link }}",
+            "Summary (EN)": "={{ $json.text.EN }}",
+            "Summary (MY)": "={{ $json.text.MY }}"
+          },
+          "matchingColumns": [
+            "Link"
+          ],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Author",
+              "displayName": "Author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image",
+              "displayName": "Image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Summary (EN)",
+              "displayName": "Summary (EN)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary (MY)",
+              "displayName": "Summary (MY)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3024,
+        -1712
+      ],
+      "id": "8ec9b943-8f58-4061-8a87-f5b5c200645d",
+      "name": "Update row in sheet2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1854569039,
+          "mode": "list",
+          "cachedResultName": "Techcrunch (my)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=1854569039"
+        },
+        "numberToDelete": 500
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3584,
+        -2048
+      ],
+      "id": "0681dd4d-eabe-4cec-bc6f-dfab6ffed840",
+      "name": "Delete rows Techcrunch",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Edit Fields').item.json.link }}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        -1184
+      ],
+      "id": "14d3f561-1b87-412c-8ffe-cd6bad8c77a4",
+      "name": "GET HTML",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        -864
+      ],
+      "id": "a18ee616-63cc-42b8-9d5d-092a3eb35a0e",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3VnIWazyLz1fpaGQ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Help me translate this to Malaysia Language:\n\nTitle: {{ $('Edit Fields').item.json.title }}\nDescription: {{ $('Edit Fields').item.json.content }}\n",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Translate this text in Malaysia Language: {  Provide your answer ONLY as a JSON object: 1. \"BM\" for the Malay language. }|Title: {{ $('Edit Fields').item.json.title }}Description: {{ $('Edit Fields').item.json.content }}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1920,
+        -1056
+      ],
+      "id": "7f00d90f-7e87-4a84-b9b7-144433c435eb",
+      "name": "Basic LLM Chain2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Techcrunch (en)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $('Edit Fields').item.json.title }}",
+            "Author": "={{ $('Edit Fields').item.json.creator }}",
+            "Link": "={{ $('Edit Fields').item.json.link }}",
+            "Description": "={{ $('Edit Fields').item.json.content }}",
+            "Created At": "={{ $('Edit Fields').item.json['datetime-utc'] }}",
+            "Image": "={{ $('Edit Fields8').item.json.image }}",
+            "Summary": "={{ $('Code in JavaScript1').item.json.EN }}",
+            "Timestamp": "={{ $('Edit Fields').item.json['timestamp-en'] }}",
+            "Isodate": "={{ $('Edit Fields').item.json.isoDate }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Author",
+              "displayName": "Author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Image",
+              "displayName": "Image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Isodate",
+              "displayName": "Isodate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2592,
+        -1152
+      ],
+      "id": "30310d47-1887-490f-8fb2-73c4dfd32a8d",
+      "name": "Append row in En Sheet",
+      "executeOnce": false,
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1854569039,
+          "mode": "list",
+          "cachedResultName": "Techcrunch (my)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=1854569039"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.text.MY.Title }}",
+            "Author": "={{ $('Edit Fields').item.json.creator }}",
+            "Link": "={{ $('Edit Fields').item.json.link }}",
+            "Timestamp": "={{ $('Edit Fields').item.json['timestamp-my'] }}",
+            "Description": "={{ $json.text.MY.Description }}",
+            "Created At": "={{ $('Edit Fields').item.json['datetime-my'] }}",
+            "Image": "={{ $('Merge').item.json.image }}",
+            "Summary": "={{ $('Code in JavaScript1').item.json.BM }}",
+            "Isodate": "={{ $('Edit Fields').item.json.isoDate }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Author",
+              "displayName": "Author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Image",
+              "displayName": "Image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Isodate",
+              "displayName": "Isodate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2592,
+        -912
+      ],
+      "id": "f083b742-3058-43f9-94d5-cd6df375d54d",
+      "name": "Append row in My Sheet",
+      "executeOnce": false,
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function node: parse fenced JSON in item.json.text and map BM -> MY\nconst out = [];\n\nfor (const item of $input.all()) {\n  const raw = item.json.text;\n\n  // 1) ambil content dalam ```json ... ```\n  const m = typeof raw === 'string' && raw.match(/```(?:json)?\\s*([\\s\\S]*?)\\s*```/i);\n  const jsonText = m ? m[1] : raw; // fallback kalau takde fence\n\n  let parsed = {};\n  try {\n    parsed = JSON.parse(jsonText);\n  } catch (err) {\n    // kalau parse gagal, return error flag supaya senang debug\n    item.json._parseError = err.message;\n    out.push(item);\n    continue;\n  }\n\n  // 2) map keys — contoh: EN stays EN, BM -> MY (atau gunakan MY jika dah wujud)\n  const EN = parsed.EN ?? parsed.En ?? parsed.en ?? '';\n  const MY = parsed.MY ?? parsed.BM ?? parsed.Bm ?? parsed.my ?? '';\n\n  // 3) bentuk output structure yg kau mahu\n  const newItem = {\n    json: {\n      text: {\n        MY,\n      },\n    },\n  };\n\n  out.push(newItem);\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2304,
+        -1056
+      ],
+      "id": "4c8e19f7-1f63-40ee-9afd-d1fb61102a40",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Techcrunch (en)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Link",
+              "lookupValue": "={{ $('RSS Feed Trigger').item.json.link }}"
+            }
+          ]
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -32,
+        -1056
+      ],
+      "id": "da053897-f663-4c12-a044-8b39172ad9c0",
+      "name": "Get rows in EN",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        -256
+      ],
+      "id": "3ed2c658-a975-49fe-af27-83304eb7264e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1854569039,
+          "mode": "list",
+          "cachedResultName": "Techcrunch (my)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=1854569039"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -224,
+        -256
+      ],
+      "id": "6a68ba8e-be62-48b5-98f3-02a43afeda5f",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0539c0ea-1b64-49cd-9e5a-3bac44c8caaa",
+              "name": "Link",
+              "value": "={{ $json.Link }}",
+              "type": "string"
+            },
+            {
+              "id": "a394dae6-ba1b-49dc-8152-b69e7373ca24",
+              "name": "Timestamp",
+              "value": "={{ DateTime.fromISO($json.Isodate).toRelative() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        -256
+      ],
+      "id": "bfe445f3-e04c-48a6-ace4-16e98809d1bf",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1854569039,
+          "mode": "list",
+          "cachedResultName": "Techcrunch (my)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=1854569039"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.Timestamp }}",
+            "Link": "={{ $json.Link }}"
+          },
+          "matchingColumns": [
+            "Link"
+          ],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Author",
+              "displayName": "Author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image",
+              "displayName": "Image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Isodate",
+              "displayName": "Isodate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        192,
+        -256
+      ],
+      "id": "6a35be73-5dc7-4709-a3e6-8249dc098b9f",
+      "name": "Update row in sheet1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=**{{ $json.Title }}**\n\n**Author:**\n{{ $json.Author }}\n\n**Summary:**\n{{ $json.Summary }}\n\n**Link:**\n{{ $json.Link }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        2944,
+        -960
+      ],
+      "id": "22a2d3b8-c00a-4b75-b9d3-3f97bab941b0",
+      "name": "Discord MY",
+      "webhookId": "d358fa6b-eedd-49c5-a3cd-56f9bda0cfed",
+      "retryOnFail": true,
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "lpNKnYXXQLLm4y6q",
+          "name": "Techcrunch MY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=\n**{{ $json.Title }}**\n\n**Author:**\n{{ $json.Author }}\n\n**Summary:**\n{{ $json.Summary }}\n\n**Link:**\n{{ $json.Link }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        2928,
+        -1296
+      ],
+      "id": "5b33a669-8feb-4ff0-a8ff-359fae9550bd",
+      "name": "Discord EN",
+      "webhookId": "d358fa6b-eedd-49c5-a3cd-56f9bda0cfed",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "qIEU4CVNjtZZKLGN",
+          "name": "Techcrunch EN"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        336
+      ],
+      "id": "3b9373e7-7043-4211-b7c2-630564b6fce9",
+      "name": "Schedule Trigger3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1854569039,
+          "mode": "list",
+          "cachedResultName": "Techcrunch (my)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=1854569039"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -256,
+        336
+      ],
+      "id": "35f93d12-e01e-44db-ba3b-f2f56d781dcd",
+      "name": "Get row(s) in sheet4",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "da91a11c-f7a6-415e-b8c7-9ffde84ab348",
+              "leftValue": "={{ $json['Created At'] }}",
+              "rightValue": "={{ DateTime.now().minus({ days: 1 }).toISO() }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "afterOrEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -48,
+        336
+      ],
+      "id": "ea74bd5f-ff9a-4c43-94ff-365cd11cf5db",
+      "name": "Check before 24 Hours1"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1854569039,
+          "mode": "list",
+          "cachedResultName": "Techcrunch (my)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit#gid=1854569039"
+        },
+        "startIndex": "={{ $json.row_number }}",
+        "numberToDelete": 500
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        272,
+        352
+      ],
+      "id": "a1ca9b6f-4555-47b3-a559-d76f688b7ac4",
+      "name": "Delete rows more than 24 Hour1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IdgpiGPiGxqJQUN8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "-1003202487968",
+        "text": "=*{{ $json.Title }}*\n\n*Author:*\n{{ $json.Author }}\n\n*Summary:*\n{{ $json.Summary }}\n\n*Link:*\n{{ $json.Link }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2928,
+        -1136
+      ],
+      "id": "b8fd36ad-211f-4ddf-abbe-08a2cfc56e1b",
+      "name": "Send a text message",
+      "webhookId": "a0a1b6f4-565f-4c88-bfcc-9d5981c9a0d8",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "telegramApi": {
+          "id": "UJrCCSh5EGXTciMb",
+          "name": "Techcrunch EN Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "-1003451766900",
+        "text": "=\n*{{ $json.Title }}*\n\n*Author:*\n{{ $json.Author }}\n\n*Summary:*\n{{ $json.Summary }}\n\n*Link:*\n{{ $json.Link }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2944,
+        -800
+      ],
+      "id": "326a990a-a006-4c52-99f3-5e64971675a7",
+      "name": "Send a text message1",
+      "webhookId": "a0a1b6f4-565f-4c88-bfcc-9d5981c9a0d8",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "telegramApi": {
+          "id": "0LR54MHBhAYLvVvm",
+          "name": "Techcrunch My Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Feature\n\n📰 Automatic RSS Feed Collection: Using RSS Feed Trigger to get the latest articles from TechCrunch.\n\n🛡️ Data Duplication Prevention: Checking existing article links in the spreadsheet before entering new data.\n\n🕸️ Smart Web Scraping: Automatically fetching the source code (HTML) of articles and following Google News redirect links.\n\n🖼️ Featured Image Extraction: Detecting and retrieving the main image URL (og:image) from the web page metadata.\n\n📝 Clean Text Extraction: Separating and cleaning the main article text (Main Content) from ads or menus.\n\n🧠 Bilingual AI Summarization: Using the Gemini model to summarize complex articles into 3 concise sentences in two languages (English and Bahasa Melayu) simultaneously.\n\n📊 Advanced Sentiment Analysis: Measuring the sentiment (positive, negative, or neutral) of articles to add value to the data.\n\n🗂️ Scheduled Data Cleanup: Automatically deleting data rows older than 24 hours to keep the spreadsheet tidy.\n\n📈 Dynamic Data Updates: Updating timestamps on existing rows as per schedule.\n\n🔗 Final Data Merging: Collecting all data pieces (Title, Link, Image URL, BM Summary, EN Summary) from various nodes into a single item before saving.\n\n📣 Multi-Channel Distribution: Distributing the formatted summary to Discord and Telegram simultaneously.",
+        "height": 576,
+        "width": 944,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1552,
+        -1344
+      ],
+      "typeVersion": 1,
+      "id": "80a5366d-00d1-4201-9468-87ec7d2b1b76",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "# Social\n\n\nGithub : https://github.com/fyyqq\n\nLinkedin : https://www.linkedin.com/in/fyqq/\n\nEmail : afiqakimy123@gmail.com",
+        "height": 208,
+        "width": 400,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1008,
+        -736
+      ],
+      "typeVersion": 1,
+      "id": "15f5ab5b-bbc0-431f-957b-6ac5083dd141",
+      "name": "Sticky Note8"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "RSS Feed Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get rows in EN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "RSS Read2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Read1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet7",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Read3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Delete rows Techcrunch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "GET HTML",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Schedule Trigger2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet3": {
+      "main": [
+        [
+          {
+            "node": "Check before 24 Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check before 24 Hours": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Delete rows more than 24 Hour",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort1": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Sort1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "HTML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields8": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet6": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields9": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get Image": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Article": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet7": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields10": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "GET HTML": {
+      "main": [
+        [
+          {
+            "node": "Get Image",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in En Sheet": {
+      "main": [
+        [
+          {
+            "node": "Discord EN",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Append row in En Sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append row in My Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get rows in EN": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in My Sheet": {
+      "main": [
+        [
+          {
+            "node": "Discord MY",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger3": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet4": {
+      "main": [
+        [
+          {
+            "node": "Check before 24 Hours1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check before 24 Hours1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Delete rows more than 24 Hour1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord MY": {
+      "main": [
+        []
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "Send a text message1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kuala_Lumpur",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "365a889f-a3d9-4a6e-8a2a-e8c7719cc111",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5e4e8b3ce9d4d5657dcab620e205dea60aa16455126ba703462cf01127b85878"
+  },
+  "id": "q7geQqwpG8z5SeE6",
+  "tags": []
+}
