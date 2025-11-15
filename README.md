@@ -36,6 +36,12 @@ Here is a list of *workflows* included in this collection. For more details, ple
 
 -----
 
+## 💬 Author
+Built by [Afiq]([https://linkedin.com/in/YOUR-LINKEDIN](https://www.linkedin.com/in/fyqq/))  
+💡 Passionate about AI Automation & Workflow Engineering.
+
+---
+
 ## 📝 License
 
 The contents of this repository are shared under the **MIT License**.
