@@ -22,7 +22,18 @@ This project is a comprehensive **N8N** automation solution to collect the lates
 
 ---
 
+## Result Output
+
+🗃️ Spreadsheet Data update:<br>
+https://docs.google.com/spreadsheets/d/1pyQn5vY8IOMPzWrTteUDWQyrSxokDXzxfqzYytpUulg/edit?usp=sharing
+
+💬Telegram Channel Update:<br>
+EN : https://t.me/techcrunch_en <br>
+MY : https://t.me/techcrunch_my
+
 ## 🛠️ Setup & Installation
+
+---
 
 ### Prerequisites
 
